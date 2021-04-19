@@ -14,6 +14,9 @@ object LocalData {
 
     var gson: Gson = Gson()
 
+    /**
+     * save object Song
+     */
     fun setNowPlayingMusic(song: Song) {
         val json: String = gson.toJson(song)
         sharedPreferences = WhatSongToListen.applicationContext().getSharedPreferences(SP_KEY, Context.MODE_PRIVATE)
@@ -24,6 +27,9 @@ object LocalData {
         editor.apply()
     }
 
+    /**
+     * get object Song
+     */
     fun getNowPlayingMusic(): Song? {
         sharedPreferences = WhatSongToListen.applicationContext().getSharedPreferences(SP_KEY, Context.MODE_PRIVATE)
 
@@ -37,6 +43,9 @@ object LocalData {
         return song
     }
 
+    /**
+     * remove object Song
+     */
     fun removeSong() {
         val settings = WhatSongToListen.applicationContext().getSharedPreferences(SP_KEY, Context.MODE_PRIVATE)
 

@@ -144,7 +144,7 @@
                         android:layout_gravity="center">
 
                         <ImageView
-                            android:id="@+id/ic_now_playing"
+                            android:id="@+id/btn_play_and_pause"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@{viewModel.isPlaying == true? @drawable/stop : @drawable/play}"/>

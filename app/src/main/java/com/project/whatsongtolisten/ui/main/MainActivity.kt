@@ -41,6 +41,7 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
             viewModel = vm
         }
 
+        //listener from viewmodel when value has changed
         with(vm) {
             actionType.observe(this@MainActivity, Observer {
                 when (it) {
@@ -55,6 +56,9 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
         initView()
     }
 
+    /**
+     * init view
+     */
     private fun initView() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
@@ -62,6 +66,9 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
         setButton()
     }
 
+    /**
+     * set binding click listener
+     */
     private fun setButton() {
         binding.searchButton.setOnClickListener { view ->
             if (binding.etSearch.text.toString() != "") {
@@ -69,16 +76,20 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
                 vm.findSongs(binding.etSearch.text.toString())
             }
         }
-        binding.icNowPlaying.setOnClickListener { view ->
+        binding.btnPlayAndPause.setOnClickListener { view ->
+            //Pause button when media player already exists, and start when exists
             if (mediaPlayer?.isPlaying!!) {
                 vm.isPlaying.value = false
+
                 try {
                     mediaPlayer?.pause()
                 } catch (e: Exception) {}
+
                 LocalData.removeSong()
                 vm.actionType.value = MainViewModel.UPDATE_ADAPTER
             } else {
                 vm.isPlaying.value = true
+
                 try {
                     mediaPlayer?.start()
                 } catch (e: Exception) {}
@@ -89,6 +100,9 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
         }
         binding.positionTime.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
+                /**
+                 * set to position progress when user slide the seekbar
+                 */
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     if (fromUser) {
                         mediaPlayer?.seekTo(progress * 1000)
@@ -102,6 +116,9 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
         )
     }
 
+    /**
+     * disable focus from edittext
+     */
     private fun disableFocusEdittext() {
         binding.etSearch.isFocusableInTouchMode = false
         binding.etSearch.isFocusable = false
@@ -109,6 +126,9 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
         binding.etSearch.isFocusable = true
     }
 
+    /**
+     * set adapter from music list
+     */
     private fun setMusicList() {
         val lLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         val itemDecor = DividerItemDecoration(this, HORIZONTAL)
@@ -122,11 +142,17 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
         adapterMusic.setItemClickCallback(this)
     }
 
+    /**
+     * interface adapter onclick
+     */
     override fun onItemClick(position: Int) {
         vm.onFindNewArtis.value = false
         setSong(position)
     }
 
+    /**
+     * set song from choosed from list
+     */
     private fun setSong(position: Int) {
         vm.nowPlayingSong.value = vm.resultList[position]
         vm.positionSong.value = position
@@ -141,6 +167,9 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
         playAudio(vm.nowPlayingSong.value)
     }
 
+    /**
+     * checking media player is already created or not
+     */
     private fun playAudio(song: Song?) {
         if (vm.currentSong.value == null || vm.currentSong.value != song) {
             vm.currentSong.value = song
@@ -163,6 +192,9 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
         setMediaPlayer()
     }
 
+    /**
+     * set media player
+     */
     private fun setMediaPlayer() {
         vm.isPlaying.value = true
 
@@ -205,6 +237,9 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
         }
     }
 
+    /**
+     * create thread for time progress
+     */
     private fun setMusicProgressTime() {
         Thread(Runnable {
             while (mediaPlayer != null) {
@@ -219,6 +254,9 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
         }).start()
     }
 
+    /**
+     * set text that will show in UI
+     */
     @SuppressLint("HandlerLeak")
     var handler = object : Handler() {
         override fun handleMessage(msg: Message) {

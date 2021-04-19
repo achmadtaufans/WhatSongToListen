@@ -31,6 +31,9 @@ class MainViewModel(private val musicRepository: MusicRepository): ViewModel() {
         onFindArtistFound.value = true
     }
 
+    /**
+     * hit endpoint and get result list from itunes API
+     */
     fun findSongs(artist: String) {
         resultList.clear()
         onFindNewArtis.value = true
@@ -56,12 +59,18 @@ class MainViewModel(private val musicRepository: MusicRepository): ViewModel() {
         }
     }
 
+    /**
+     * set song component in bottom bar
+     */
     fun setNowPlayingBar() {
         nowPlayingTitle.value = nowPlayingSong.value?.trackName
         nowPlayingArtist.value = nowPlayingSong.value?.artistName
         actionType.postValue(UPDATE_ADAPTER)
     }
 
+    /**
+     * parse from milli to second or mins
+     */
     fun parseTime(time: Int): String {
         var timeText = ""
         val min = time / 1000 / 60
