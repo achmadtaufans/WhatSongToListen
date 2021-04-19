@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.project.whatsongtolisten.ui.main.MainViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dim_gray">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/toolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.WhatToListen.AppBarOverlay">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/Theme.WhatToListen.PopupOverlay" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/black"
+            android:layout_below="@id/toolbarLayout">
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:padding="4dp"
+                android:focusableInTouchMode="true"
+                android:hint="Search by artist"
+                android:layout_margin="4dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/search_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_margin="4dp"
+                android:text="Search" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_music_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_search_bar"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:divider="@android:color/transparent"
+            android:layout_above="@+id/dialog_now_playing"
+            android:dividerHeight="10.0sp" />
+
+        <LinearLayout
+            android:id="@+id/dialog_now_playing"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@color/black"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="0dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="@{viewModel.nowPlayingSong != null? View.VISIBLE : View.GONE}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/item_np_band_poster"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/image"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_gravity="center"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/ll_poster_movie"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/title_np"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textStyle="bold"
+                            android:layout_marginTop="4dp"
+                            android:textColor="@color/white"
+                            android:maxLines="1"
+                            android:text="@{viewModel.nowPlayingTitle}"/>
+
+                        <TextView
+                            android:id="@+id/artist_np"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textSize="14dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:textColor="@color/white"
+                            android:maxLines="1"
+                            android:text="@{viewModel.nowPlayingArtist}"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="24dp"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:id="@+id/ic_now_playing"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@{viewModel.isPlaying == true? @drawable/stop : @drawable/play}"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/elapsed_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:textColor="@color/white"
+                        android:text="0:00"/>
+
+                    <androidx.appcompat.widget.AppCompatSeekBar
+                        android:id="@+id/position_time"
+                        android:layout_width="270dp"
+                        android:layout_height="wrap_content"
+                        android:max="100"
+                        android:progress="50"
+                        android:progressBackgroundTint="#9E6E6E"
+                        android:progressTint="#FFFFFF" />
+
+                    <TextView
+                        android:id="@+id/max_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:textColor="@color/white"
+                        android:text="0:00"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:visibility="@{viewModel.isLoadingVisible? View.VISIBLE : View.GONE}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Artist not found"
+            android:layout_centerInParent="true"
+            android:textSize="28dp"
+            android:visibility="@{viewModel.onFindArtistFound == false? View.VISIBLE : View.GONE}"/>
+    </RelativeLayout>
+</layout>
