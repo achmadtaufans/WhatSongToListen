@@ -149,12 +149,14 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
             try {
                 if (mediaPlayer?.isPlaying!!) {
                     mediaPlayer?.stop()
+                    mediaPlayer?.release()
                     vm.actionType.value = MainViewModel.UPDATE_ADAPTER
                 }
             } catch (e: Exception) {}
         } else {
             if (mediaPlayer?.isPlaying!!) {
                 mediaPlayer?.stop()
+                mediaPlayer?.release()
                 vm.actionType.value = MainViewModel.UPDATE_ADAPTER
             }
         }
@@ -175,7 +177,6 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
             mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
         }
         try {
-            mediaPlayer?.setOnPreparedListener(OnPreparedListener { mp -> mp.start() })
             mediaPlayer?.setDataSource(vm.currentSong.value?.previewUrl)
             mediaPlayer?.prepare()
 
@@ -190,12 +191,15 @@ class MainActivity : BaseActivity(), MusicAdapter.ItemMovieClickCallback {
                 vm.actionType.value = MainViewModel.UPDATE_ADAPTER
             })
 
-            val songDuration = mediaPlayer?.duration!!.toInt()/1000
+            mediaPlayer?.setOnPreparedListener {
+                val songDuration = mediaPlayer?.duration!!.toInt()/1000
 
-            binding.positionTime.max = songDuration
-            binding.maxDuration.text = vm.parseTime(mediaPlayer?.duration!!)
+                binding.positionTime.max = songDuration
+                binding.maxDuration.text = vm.parseTime(mediaPlayer?.duration!!)
 
-            setMusicProgressTime()
+                setMusicProgressTime()
+                mediaPlayer?.start()
+            }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
